@@ -1,8 +1,10 @@
 from urllib import request
-import logging,json,sys
+import logging,json,sys,time
 logging.basicConfig(filename='C:\\Users\MQM\Desktop\example.log',level=logging.DEBUG)
 #d = 'on=true&page=5021&pageSize=15&productName=&conditionType=1&applyname=&applysn='
 d= ''
+ISOTIMEFORMAT='%Y-%m-%d %X' 
+print(time.strftime( ISOTIMEFORMAT, time.localtime() ),5)
 if not d.strip():
     print("kong")
     sys.exit()
@@ -20,6 +22,6 @@ with request.urlopen(req) as f:
         JsonObj = json.loads(returnData)
     except:
         logging.debug("数据为空，跳过")
-    with open('F:\JTPData\gcft_P_5021.json', 'w',errors='ignore') as f:
-                f.write(json.dumps(JsonObj,ensure_ascii=False,indent=2))#需要加入ensure_ascii=False，不然输出\u535a\u5ba2\u56ed
+    #with open('F:\JTPData\gcft_P_5021.json', 'w',errors='ignore') as f:
+     #           f.write(json.dumps(JsonObj,ensure_ascii=False,indent=2))#需要加入ensure_ascii=False，不然输出\u535a\u5ba2\u56ed
                 #count = count +1

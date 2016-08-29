@@ -25,8 +25,8 @@ ws['G1'] = "企业地址"
 ws['H1'] = "卫生许可"
 ws['I1'] = "说明"
 ws['J1'] = "processid"
-
 for value in range(1,600000):
+    
     with open('F:\JTPData\detail\\'+str(value)+'_gcft.json' , 'r',encoding='utf-8',errors='ignore') as f:
         jsonData = json.load(f)
         name = jsonData["productname"]
@@ -39,14 +39,36 @@ for value in range(1,600000):
         remark  = jsonData["scqyUnitinfo"]["remark"]
         processid  = jsonData["processid"]
         
-        ws['A'+str(value-998)] = str(value-999)
-        ws['B'+str(value-998)] = name
-        ws['C'+str(value-998)] = apply_sn
-        ws['D'+str(value-998)] = provinceConfirm
-        ws['E'+str(value-998)] = state
-        ws['F'+str(value-998)] = enterprise_name
-        ws['G'+str(value-998)] = enterprise_address
-        ws['H'+str(value-998)] = enterprise_healthpermits
-        ws['I'+str(value-998)] = remark
-        ws['J'+str(value-998)] = processid
-wb.save("F:\JTPData\detail\\test.xlsx")
+        ws['A'+str(value+1)] = str(value)
+        ws['B'+str(value+1)] = name
+        ws['C'+str(value+1)] = apply_sn
+        ws['D'+str(value+1)] = provinceConfirm
+        ws['E'+str(value+1)] = state
+        ws['F'+str(value+1)] = enterprise_name
+        ws['G'+str(value+1)] = enterprise_address
+        ws['H'+str(value+1)] = enterprise_healthpermits
+        ws['I'+str(value+1)] = remark
+        ws['J'+str(value+1)] = processid
+        tep =int(ord('J'))
+        for cf in jsonData["pfList"]:
+            tep = tep+1
+            cowNum = ''
+            if tep <=90:
+                cowNum = chr(tep)
+            if tep > 90:
+                cowNum = 'A'+chr(tep-26)
+            if tep >116:
+                cowNum = 'B'+chr(tep-52)
+            if tep>142:
+                cowNum = 'C'+chr(tep-78)
+            if tep>168:
+                cowNum ='D'+chr(tep-104)
+            try:
+                ws[cowNum+str(value+1)] = cf["cname"]
+            except:
+                print("行数超出")
+            
+    if value % 1000 == 0:
+        print("value:",value)
+        wb.save("F:\JTPData\\test.xlsx")
+#wb.save("F:\JTPData\\test.xlsx")
