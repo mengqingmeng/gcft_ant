@@ -44,34 +44,23 @@ for value in range(1,600000):
                 ckList.append(tempStr) 
             ckStr = str(ckList)
             
-        cursor.execute('select id from new_gcft_product t where t.name = %s', (name,))
+        cursor.execute('select id from new_gcft_product2 t where t.name = %s', (name,))
         values = cursor.fetchall()#查询结果
         if values:#如果产品存在,
             logging.debug("产品已存在,id:%d,fileId:%d" ,values[0][0],value)
             #print("产品已存在,id,fileId",(values[0][0],value))
             continue
+        #成分
+        cfList = []
+        for cf in jsonData["pfList"]: #遍历成分
+            cfList.append(cf["cname"])
+        cfStr = "，".join(cfList)
         #产品
-        cursor.execute('insert into new_gcft_product (id,name,apply_sn,provinceConfirm,state,enterprise_name,enterprise_address,enterprise_healthpermits,sj_enterprise_name,sj_enterprise_address,sj_enterprise_enterprise_healthpermits,remark,ck,processid)'
-                       'values (%s,%s,%s, %s,%s, %s,%s, %s,%s,%s,%s, %s,%s,%s)',(0,name,apply_sn,provinceConfirm,state,enterprise_name,enterprise_address,enterprise_healthpermits,sj_enterprise_name,sj_enterprise_address,sj_enterprise_enterprise_healthpermits,remark,ckStr,processid))
+        cursor.execute('insert into new_gcft_product2 (id,name,apply_sn,provinceConfirm,state,enterprise_name,enterprise_address,enterprise_healthpermits,sj_enterprise_name,sj_enterprise_address,sj_enterprise_enterprise_healthpermits,remark,ck,processid,cf)'
+                       'values (%s,%s,%s, %s,%s, %s,%s, %s,%s,%s,%s, %s,%s,%s,%s)',(0,name,apply_sn,provinceConfirm,state,enterprise_name,enterprise_address,enterprise_healthpermits,sj_enterprise_name,sj_enterprise_address,sj_enterprise_enterprise_healthpermits,remark,ckStr,processid,cfStr))
         
         conn.commit()
-        addedProductId = int(cursor.lastrowid)
-        #成分
-        for cf in jsonData["pfList"]: #遍历成分
-            cfid = 0
-            cursor.execute('select id from new_gcft_things t where t.name = %s', (cf["cname"],))
-            values = cursor.fetchall()#查询结果
-            if values:#如果成分存在,
-                cfid = values[0][0]
-            if len(values)==0:#如果不存在，在先将数据插入数据库 ，再将id添入ids[]
-                cursor.execute('insert into new_gcft_things values (%s,%s)',( 0,cf["cname"]))
-                conn.commit()
-                cfid = int(cursor.lastrowid)
-            try:
-                cursor.execute('insert into new_gcft_product_thing (productId,thingId) values (%s, %s)',(str(addedProductId),cfid))
-            except:
-                logging.debug("产品-成分冲突，fail: %d" ,value)
-            conn.commit()
+           
     if value%1000==0:
         print(time.strftime( ISOTIMEFORMAT, time.localtime() ),value)
     logging.debug("success: %d" ,value)
