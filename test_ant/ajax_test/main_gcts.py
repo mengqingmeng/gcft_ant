@@ -7,11 +7,10 @@ Created on 2016年8月17日
 import urllib,json,time,codecs,threading
 from ajax_test import requestGCTS
 #import requestData
-
 ISOTIMEFORMAT='%Y-%m-%d %X'
 print("begin",time.strftime( ISOTIMEFORMAT, time.localtime() ))
 #requestData.getData(2,4)
-t1 = threading.Thread(target=requestGCTS.getData, args=(1,2,"T1"))
+t1 = threading.Thread(target=requestGCTS.getData, args=(18184,18186,"T1"))
 #t2 = threading.Thread(target=requestGCTS.getData, args=(5,10,"T2"))
 t1.start()
 #t2.start()
