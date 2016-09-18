@@ -5,7 +5,7 @@ Created on 2016年8月17日
 @author: MQM
 '''
 import urllib,json,time,codecs,threading
-#from ajax_test import requestDetail
+#from ajaantport requestDetail
 import requestDetail
 
 ISOTIMEFORMAT='%Y-%m-%d %X'    
